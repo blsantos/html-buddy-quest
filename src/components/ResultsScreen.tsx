@@ -128,10 +128,13 @@ export const ResultsScreen = ({
 
           <div className="space-y-2">
             <CardTitle className={`text-5xl font-bold ${messageData.color}`}>
-              {messageData.title}
+              Félicitations, Bâtisseur ! 🏗️
             </CardTitle>
             <CardDescription className="text-xl text-foreground/80">
-              {messageData.message}
+              {percentage === 100 ? "🏆 Tu as terminé ton Tour de France avec un chef-d'œuvre ! Tu es prêt à bâtir le web !" :
+               percentage >= 80 ? "🌟 Excellent travail ! Tu as bien compris les fondations. Continue à perfectionner ton art !" :
+               percentage >= 60 ? "💪 Bien joué apprenti ! Tu progresses bien. Continue ton apprentissage avec détermination !" :
+               "🚀 Bon début ! Chaque compagnon commence par apprendre. Refais le parcours pour progresser !"}
             </CardDescription>
           </div>
 
@@ -198,7 +201,7 @@ export const ResultsScreen = ({
             className="w-full h-14 text-xl font-bold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 shadow-lg hover:shadow-xl transition-all duration-300"
           >
             <RefreshCw className="h-5 w-5 mr-2" />
-            Recommencer l'aventure ! 🚀
+            Recommencer mon Tour de France ! 🏗️
           </Button>
 
           <div className="text-center text-sm text-muted-foreground pt-4 border-t border-border space-y-2">

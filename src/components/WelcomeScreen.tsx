@@ -35,12 +35,11 @@ export const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
             </div>
           </div>
           <CardTitle className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-            Aventure HTML ! 🎮
+            Les Bâtisseurs du Digital 🏗️
           </CardTitle>
           <CardDescription className="text-lg md:text-xl text-foreground/80">
-            Bienvenue dans ton parcours d'apprentissage HTML !
-            <br />
-            Tu vas découvrir les balises essentielles de manière fun et interactive ! 🌟
+            Bienvenue, apprenti bâtisseur ! Comme les Compagnons du Devoir bâtissent des cathédrales,<br />
+            tu vas apprendre à bâtir le web avec le HTML. Prêt pour ton Tour de France du code ? 🌟
           </CardDescription>
         </CardHeader>
 
@@ -48,24 +47,28 @@ export const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
           <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 p-6 rounded-xl space-y-3 border border-primary/20">
             <h3 className="font-bold text-xl flex items-center gap-2 text-foreground">
               <Rocket className="h-5 w-5 text-primary" />
-              Ce que tu vas apprendre :
+              Ton Tour de France du HTML :
             </h3>
             <ul className="space-y-2 text-foreground/90">
               <li className="flex items-start gap-2">
-                <span className="text-success text-xl">✓</span>
-                <span><strong>Les balises obligatoires</strong> pour structurer une page</span>
+                <span className="text-success text-xl">🔨</span>
+                <span><strong>Les fondations</strong> - Balises obligatoires pour toute construction web</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-success text-xl">✓</span>
-                <span><strong>Les titres</strong> (H1, H2, H3...) pour organiser ton contenu</span>
+                <span className="text-success text-xl">🏛️</span>
+                <span><strong>L'architecture</strong> - Titres et structure de ton contenu</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-success text-xl">✓</span>
-                <span><strong>Les liens</strong> pour naviguer entre les pages</span>
+                <span className="text-success text-xl">🔗</span>
+                <span><strong>Les connexions</strong> - Liens pour relier tes pages</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-success text-xl">✓</span>
-                <span><strong>Les tableaux</strong> pour afficher des données</span>
+                <span className="text-success text-xl">📋</span>
+                <span><strong>Les listes et tableaux</strong> - Organiser l'information</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-success text-xl">⚒️</span>
+                <span><strong>La pratique</strong> - Écrire et corriger ton propre code</span>
               </li>
             </ul>
           </div>
@@ -94,7 +97,7 @@ export const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
               size="lg" 
               className="w-full h-14 text-xl font-bold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              Commencer l'aventure ! 🚀
+              Débuter mon Tour de France 🏗️
             </Button>
           </form>
 

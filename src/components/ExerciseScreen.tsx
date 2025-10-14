@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, XCircle, Lightbulb, Trophy } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { CheckCircle2, XCircle, Lightbulb, Trophy, Code } from "lucide-react";
 import { Exercise } from "@/data/exercises";
 import { toast } from "sonner";
 
@@ -22,11 +23,14 @@ export const ExerciseScreen = ({
   currentAnswer
 }: ExerciseScreenProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [codeAnswer, setCodeAnswer] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
   const progress = (exerciseNumber / totalExercises) * 100;
+  const isCodeExercise = exercise.type === "code";
 
   useEffect(() => {
     setSelectedAnswer(null);
+    setCodeAnswer("");
     setShowFeedback(false);
   }, [exercise.id]);
 
@@ -52,7 +56,38 @@ export const ExerciseScreen = ({
     onAnswer(answer);
   };
 
-  const isCorrect = selectedAnswer === exercise.correctAnswer;
+  const handleCodeSubmit = () => {
+    if (showFeedback || !codeAnswer.trim()) return;
+    
+    setShowFeedback(true);
+    
+    // Normalize both answers for comparison
+    const normalizeCode = (code: string) => {
+      return code.trim().replace(/\s+/g, '').toLowerCase().replace(/"/g, "'");
+    };
+    
+    const normalizedUserCode = normalizeCode(codeAnswer);
+    const normalizedCorrect = normalizeCode(exercise.correctAnswer);
+    const isCorrect = normalizedUserCode === normalizedCorrect;
+    
+    if (isCorrect) {
+      toast.success(exercise.encouragement, {
+        icon: "🎉",
+        duration: 3000
+      });
+      onAnswer(exercise.correctAnswer);
+    } else {
+      toast.error("Pas tout à fait ! Regarde l'explication 📚", {
+        duration: 3000
+      });
+      onAnswer(codeAnswer);
+    }
+  };
+
+  const isCorrect = isCodeExercise 
+    ? codeAnswer.trim().replace(/\s+/g, '').toLowerCase().replace(/"/g, "'") === 
+      exercise.correctAnswer.replace(/\s+/g, '').toLowerCase().replace(/"/g, "'")
+    : selectedAnswer === exercise.correctAnswer;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -83,8 +118,32 @@ export const ExerciseScreen = ({
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <div className="grid gap-3">
-            {exercise.options.map((option, index) => {
+          {isCodeExercise ? (
+            <div className="space-y-4">
+              <div className="bg-muted/50 p-4 rounded-lg border-2 border-primary/20">
+                <div className="flex items-center gap-2 mb-3">
+                  <Code className="h-5 w-5 text-primary" />
+                  <span className="font-semibold text-foreground">Exercice pratique - Écris ton code HTML :</span>
+                </div>
+                <Textarea
+                  value={codeAnswer}
+                  onChange={(e) => setCodeAnswer(e.target.value)}
+                  placeholder={exercise.placeholder || "Écris ton code HTML ici..."}
+                  className="font-mono text-base min-h-[140px] p-4 bg-background"
+                  disabled={showFeedback}
+                />
+              </div>
+              <Button
+                onClick={handleCodeSubmit}
+                disabled={showFeedback || !codeAnswer.trim()}
+                className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
+              >
+                Vérifier mon code 🔍
+              </Button>
+            </div>
+          ) : (
+            <div className="grid gap-3">
+              {exercise.options?.map((option, index) => {
               const isSelected = selectedAnswer === option;
               const isCorrectOption = option === exercise.correctAnswer;
               
@@ -124,6 +183,7 @@ export const ExerciseScreen = ({
               );
             })}
           </div>
+          )}
 
           {showFeedback && (
             <div className={`p-6 rounded-xl border-2 animate-in slide-in-from-bottom-4 duration-500 ${
