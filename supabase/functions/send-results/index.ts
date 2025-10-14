@@ -13,6 +13,7 @@ interface SendResultsRequest {
   score: number;
   totalQuestions: number;
   percentage: number;
+  totalTime: number;
   resultsHtml: string;
 }
 
@@ -22,9 +23,13 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { userEmail, score, totalQuestions, percentage, resultsHtml }: SendResultsRequest = await req.json();
+    const { userEmail, score, totalQuestions, percentage, totalTime, resultsHtml }: SendResultsRequest = await req.json();
 
-    console.log("Envoi des résultats pour:", userEmail);
+    const minutes = Math.floor(totalTime / 60);
+    const seconds = totalTime % 60;
+    const timeFormatted = `${minutes}min ${seconds}s`;
+
+    console.log("Envoi des résultats pour:", userEmail, "Temps:", timeFormatted);
 
     // Envoi au formateur via Resend API
     const formatorEmailResponse = await fetch("https://api.resend.com/emails", {

@@ -12,6 +12,7 @@ interface ExerciseScreenProps {
   exerciseNumber: number;
   totalExercises: number;
   onAnswer: (answer: string) => void;
+  onNextQuestion: () => void;
   currentAnswer?: string;
 }
 
@@ -20,6 +21,7 @@ export const ExerciseScreen = ({
   exerciseNumber,
   totalExercises,
   onAnswer,
+  onNextQuestion,
   currentAnswer
 }: ExerciseScreenProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -61,9 +63,14 @@ export const ExerciseScreen = ({
     
     setShowFeedback(true);
     
-    // Normalize both answers for comparison
+    // Normalize both answers for comparison - focus on HTML structure, not content/spelling
     const normalizeCode = (code: string) => {
-      return code.trim().replace(/\s+/g, '').toLowerCase().replace(/"/g, "'");
+      return code
+        .trim()
+        .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+        .toLowerCase()
+        .replace(/"/g, "'") // Normalize quotes
+        .replace(/>\s+</g, '><'); // Remove spaces between tags
     };
     
     const normalizedUserCode = normalizeCode(codeAnswer);
@@ -84,9 +91,17 @@ export const ExerciseScreen = ({
     }
   };
 
+  const normalizeForComparison = (code: string) => {
+    return code
+      .trim()
+      .replace(/\s+/g, ' ')
+      .toLowerCase()
+      .replace(/"/g, "'")
+      .replace(/>\s+</g, '><');
+  };
+
   const isCorrect = isCodeExercise 
-    ? codeAnswer.trim().replace(/\s+/g, '').toLowerCase().replace(/"/g, "'") === 
-      exercise.correctAnswer.replace(/\s+/g, '').toLowerCase().replace(/"/g, "'")
+    ? normalizeForComparison(codeAnswer) === normalizeForComparison(exercise.correctAnswer)
     : selectedAnswer === exercise.correctAnswer;
 
   return (
@@ -129,21 +144,32 @@ export const ExerciseScreen = ({
                   value={codeAnswer}
                   onChange={(e) => setCodeAnswer(e.target.value)}
                   placeholder={exercise.placeholder || "Écris ton code HTML ici..."}
-                  className="font-mono text-base min-h-[140px] p-4 bg-background"
+                  className="font-mono text-sm min-h-[200px] p-4 bg-background leading-relaxed"
                   disabled={showFeedback}
+                  spellCheck={false}
                 />
               </div>
-              <Button
-                onClick={handleCodeSubmit}
-                disabled={showFeedback || !codeAnswer.trim()}
-                className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
-              >
-                Vérifier mon code 🔍
-              </Button>
+              {!showFeedback ? (
+                <Button
+                  onClick={handleCodeSubmit}
+                  disabled={!codeAnswer.trim()}
+                  className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
+                >
+                  Vérifier mon code 🔍
+                </Button>
+              ) : (
+                <Button
+                  onClick={onNextQuestion}
+                  className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
+                >
+                  Question suivante →
+                </Button>
+              )}
             </div>
           ) : (
-            <div className="grid gap-3">
-              {exercise.options?.map((option, index) => {
+            <>
+              <div className="grid gap-3">
+                {exercise.options?.map((option, index) => {
               const isSelected = selectedAnswer === option;
               const isCorrectOption = option === exercise.correctAnswer;
               
@@ -181,8 +207,18 @@ export const ExerciseScreen = ({
                   </span>
                 </Button>
               );
-            })}
-          </div>
+              })}
+              </div>
+              
+              {showFeedback && (
+                <Button
+                  onClick={onNextQuestion}
+                  className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 mt-3"
+                >
+                  Question suivante →
+                </Button>
+              )}
+            </>
           )}
 
           {showFeedback && (

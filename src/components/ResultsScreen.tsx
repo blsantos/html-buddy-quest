@@ -12,6 +12,7 @@ interface ResultsScreenProps {
   userEmail: string;
   answers: Record<number, string>;
   exercises: Exercise[];
+  totalTime: number;
 }
 
 export const ResultsScreen = ({
@@ -19,7 +20,8 @@ export const ResultsScreen = ({
   totalQuestions,
   userEmail,
   answers,
-  exercises
+  exercises,
+  totalTime
 }: ResultsScreenProps) => {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -33,10 +35,15 @@ export const ResultsScreen = ({
     setSending(true);
     
     try {
+      const minutes = Math.floor(totalTime / 60);
+      const seconds = totalTime % 60;
+      const timeFormatted = `${minutes}min ${seconds}s`;
+      
       const resultsHtml = `
         <h1>🎉 Résultats de l'exercice HTML</h1>
         <h2>Stagiaire : ${userEmail}</h2>
         <h3>Score : ${score}/${totalQuestions} (${percentage}%)</h3>
+        <h3>Temps total : ${timeFormatted}</h3>
         
         <h3>Détails des réponses :</h3>
         <ul>
@@ -62,6 +69,7 @@ export const ResultsScreen = ({
           score,
           totalQuestions,
           percentage,
+          totalTime,
           resultsHtml
         }
       });

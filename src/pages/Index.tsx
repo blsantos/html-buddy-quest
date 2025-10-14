@@ -10,10 +10,13 @@ const Index = () => {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [score, setScore] = useState(0);
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [totalTime, setTotalTime] = useState<number>(0);
 
   const handleStart = (email: string) => {
     setUserEmail(email);
     setCurrentStep("exercise");
+    setStartTime(Date.now());
   };
 
   const handleAnswer = (answer: string) => {
@@ -25,15 +28,16 @@ const Index = () => {
     if (isCorrect) {
       setScore(score + 1);
     }
+  };
 
+  const handleNextQuestion = () => {
     if (currentExerciseIndex < exercises.length - 1) {
-      setTimeout(() => {
-        setCurrentExerciseIndex(currentExerciseIndex + 1);
-      }, 1500);
+      setCurrentExerciseIndex(currentExerciseIndex + 1);
     } else {
-      setTimeout(() => {
-        setCurrentStep("results");
-      }, 1500);
+      if (startTime) {
+        setTotalTime(Math.floor((Date.now() - startTime) / 1000));
+      }
+      setCurrentStep("results");
     }
   };
 
@@ -46,6 +50,7 @@ const Index = () => {
           exerciseNumber={currentExerciseIndex + 1}
           totalExercises={exercises.length}
           onAnswer={handleAnswer}
+          onNextQuestion={handleNextQuestion}
           currentAnswer={answers[currentExerciseIndex]}
         />
       )}
@@ -56,6 +61,7 @@ const Index = () => {
           userEmail={userEmail}
           answers={answers}
           exercises={exercises}
+          totalTime={totalTime}
         />
       )}
     </div>
