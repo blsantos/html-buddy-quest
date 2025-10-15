@@ -28,8 +28,30 @@ export const ResultsScreen = ({
   const percentage = Math.round((score / totalQuestions) * 100);
 
   useEffect(() => {
+    saveToDatabase();
     sendResults();
   }, []);
+
+  const saveToDatabase = async () => {
+    try {
+      const { error } = await supabase
+        .from('quiz_results')
+        .insert({
+          user_email: userEmail,
+          score,
+          total_questions: totalQuestions,
+          percentage,
+          total_time: totalTime,
+          answers: answers
+        });
+
+      if (error) {
+        console.error("Erreur lors de la sauvegarde:", error);
+      }
+    } catch (error) {
+      console.error("Erreur:", error);
+    }
+  };
 
   const sendResults = async () => {
     setSending(true);

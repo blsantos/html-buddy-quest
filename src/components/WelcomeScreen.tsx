@@ -101,11 +101,14 @@ export const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
             </Button>
           </form>
 
-          <div className="text-center text-sm text-muted-foreground pt-4 border-t border-border">
+          <div className="text-center text-sm text-muted-foreground pt-4 border-t border-border space-y-2">
             <p className="flex items-center justify-center gap-2">
               <Sparkles className="h-4 w-4 text-accent" />
               Prends ton temps, il n'y a pas de limite ! Tu peux le faire ! 💪
             </p>
+            <a href="/admin/login" className="text-xs opacity-30 hover:opacity-100 transition-opacity">
+              Admin
+            </a>
           </div>
         </CardContent>
       </Card>
